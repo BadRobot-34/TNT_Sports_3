@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Reproductor DASH - tntsports4uk</title>
+  <style>
+    html, body { width: 100%; height: 100%; margin: 0; padding: 0; background: #000; overflow: hidden; }
+    #player { width: 100%; height: 100%; position: fixed; top: 0; left: 0; }
+  </style>
+
+  <!-- Clappr Core -->
+  <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+  <!-- Shaka Player Core -->
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.6/dist/shaka-player.compiled.js"></script>
+  <!-- Plugin Dash Shaka -->
+  <script src="https://cdn.jsdelivr.net/npm/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
+</head>
+<body>
+
+<div id="player"></div>
+
+<script>
+  // KID extraído del manifiesto (FA34FA8C90336DD528C7A23871CAD1FE en formato plano minúscula)[cite: 1]
+  const hexKid = "cc91508324ce9dcaf425a43d58f1d9d4";
+  const hexKey = "643e5474d9edd87c7d9091c8c97994ca"; // Clave de descifrado correspondiente
+
+  var player = new Clappr.Player({
+    source: 'https://otte.live.fly.ww.aiv-cdn.net/bom-nitro/live/clients/dash/enc/dev1hjwzh9/out/v1/a5f0ee7ad7b24906b14f43bebbbe4678/cenc.mpd',
+    parentId: '#player',
+    plugins: [DashShakaPlayback],
+    shakaOnBeforeLoad: function(shakaPlayer) {
+      const clearKeysConfig = {};
+      clearKeysConfig[hexKid] = hexKey;
+
+      shakaPlayer.configure({
+        drm: {
+          clearKeys: clearKeysConfig
+        }
+      });
+    },
+    autoPlay: true,
+    mute: false,
+    volume: 100,
+    width: '100%',
+    height: '100%'
+  });
+</script>
+
+</body>
+</html>
